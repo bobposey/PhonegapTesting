@@ -24,7 +24,7 @@
 
   <!-- App layout -->
   <ons-splitter>
-    <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+    <ons-splitter-side id="menu" side="left" width="220px" collapse>
       <ons-page>
         <ons-list>
           <ons-list-item onclick="fn.load('home.html')" tappable>
@@ -81,7 +81,7 @@
           <label class="left" id="takeoff-to-first-break-display">
             15
           </label>
-            <ons-range style="width: 100%;" value="15" min="0" max="60" step="5" onchange="settings.update()" id="takeoff-to-first-break-input"></ons-range>
+            <ons-range style="width: 100%;" value="15" min="0" max="60" step="5" oninput="settings.update()" id="takeoff-to-first-break-input"></ons-range>
         </ons-row>
         </ons-list-item>
         </ons-list>

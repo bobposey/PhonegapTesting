@@ -24,7 +24,6 @@
     };
 } )();
 
-
 var settings = {
     update: function() {
         document.getElementById('takeoff-to-first-break-display').innerHTML = document.getElementById('takeoff-to-first-break-input').value;
