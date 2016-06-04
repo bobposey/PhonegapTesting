@@ -77,18 +77,14 @@
       </ons-toolbar>
       <ons-list>
         <ons-list-header>Takeoff to First Break</ons-list-header>
-        <ons-list-item tappable>
-          <label class="left">
+        <ons-list-item>
+          <label class="left" id="takeoff-to-first-break-display">
             15
           </label>
-          <ons-input
-                  type="number"
-                  placeholder="Takeoff to First Break"
-                  min="0"
-                  max="30">
-          </ons-input>
+            <ons-range style="width: 100%;" value="15" min="0" max="60" step="5" onchange="settings.update()" id="takeoff-to-first-break-input"></ons-range>
+        </ons-row>
         </ons-list-item>
-
+        </ons-list>
     </ons-page>
   </ons-template>
 
