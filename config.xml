@@ -63,6 +63,11 @@
     <icon src="res/icon/ios/icon-small.png" platform="ios" width="29" height="29"/>
     <icon src="res/icon/ios/icon-small@2x.png" platform="ios" width="58" height="58"/>
     <icon src="res/icon/ios/icon-small@3x.png" platform="ios" width="87" height="87"/>
+    <splash src="res/screen/ios/Default-568h@2x~iphone.png" platform="ios" width="640" height="1136"/>
+    <splash src="res/screen/ios/Default-667h.png" platform="ios" width="750" height="1334"/>
+    <splash src="res/screen/ios/Default-736h.png" platform="ios" width="1242" height="2208"/>
+    <splash src="res/screen/ios/Default-Landscape-736h.png" platform="ios" width="2208" height="1242"/>
+
     <splash src="res/screen/ios/Default-portrait~iphone.png" platform="ios" width="320" height="480"/>
     <splash src="res/screen/ios/Default-portrait@2x~iphone4.png" platform="ios" width="640" height="960"/>
     <splash src="res/screen/ios/Default-portrait@2x~iphone5.jpg" platform="ios" width="640" height="1136"/>
