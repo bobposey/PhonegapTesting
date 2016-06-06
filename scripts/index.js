@@ -27,5 +27,8 @@
 var settings = {
     update: function() {
         document.getElementById('takeoff-to-first-break-display').innerHTML = document.getElementById('takeoff-to-first-break-input').value;
+        document.getElementById('end-of-last-break-display').innerHTML = document.getElementById('end-of-last-break-input').value;
+        document.getElementById('meal-lead-time-display').innerHTML = document.getElementById('wakeup-buffer-input').value;
+        document.getElementById('wakeup-buffer-display').innerHTML = document.getElementById('wakeup-buffer-input').value;
     }
 }
