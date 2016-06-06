@@ -79,7 +79,7 @@
             </label>
           </ons-col>
           <ons-col>
-            <ons-range style="width: 100%;" value="50" min="0" max="90" step="5" oninput="settings.update()" onchange="settings.update()" id="end-oflast-break-input"></ons-range>
+            <ons-range style="width: 100%;" value="50" min="0" max="90" step="5" oninput="settings.update()" onchange="settings.update()" id="end-of-last-break-input"></ons-range>
           </ons-col>
           <ons-col width="40px" style="text-align: center; line-height: 31px;">
           </ons-col>
@@ -93,8 +93,24 @@
             Double Augmented (2 breaks)?
           </div>
           <div class="right">
-            <ons-switch id="double-augmented-switch" onchange="ons.notification.alert('switched!')"></ons-switch>
+            <ons-switch id="double-augmented-switch" onchange="settings.update()"></ons-switch>
           </div>
+        </ons-list-item>
+      </ons-list>
+
+      <ons-list>
+        <ons-list-header>Takeoff Time</ons-list-header>
+        <ons-list-item>
+          <ons-input
+                  type="text"
+                  pattern="[0-9]*"
+                  placeholder="Age"
+                  min="0"
+                  max="2359"
+                  input-id="takeoff-time"
+                  onchange="ons.notification.alert('time changed!')"
+                  >
+          </ons-input>
         </ons-list-item>
       </ons-list>
 
