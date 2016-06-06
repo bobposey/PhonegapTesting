@@ -98,21 +98,47 @@
         </ons-list-item>
       </ons-list>
 
-      <ons-list>
+      <ons-list  style="width:50%; float:left">
         <ons-list-header>Takeoff Time</ons-list-header>
         <ons-list-item>
           <ons-input
-                  type="text"
-                  pattern="[0-9]{4}"
+                  type="time"
                   placeholder="Takeoff Time"
-                  min="0"
-                  max="2359"
                   input-id="takeoff-time"
-                  onchange="ons.notification.alert('time changed!')"
+                  onchange="settings.update()"
                   >
           </ons-input>
         </ons-list-item>
       </ons-list>
+
+      <ons-list style="width:50%; float:right">
+        <ons-list-header>Flight Time</ons-list-header>
+        <ons-list-item>
+          <ons-input
+                  type="time"
+                  placeholder="Flight Time"
+                  input-id="flight-time"
+                  onchange="settings.update()"
+          >
+          </ons-input>
+        </ons-list-item>
+
+      </ons-list>
+
+      <div class="results" style="clear:both">
+        <ons-list>
+          <ons-list-header>RESULTS</ons-list-header>
+          <ons-list-item>
+            <div class="left">
+              <div class="list__item__time">11:45</div>
+            </div>
+            <div class="center">
+              <div class="list__item_action">
+                End of First Break
+              </div>
+            </div>
+          </ons-list-item>
+      </div>
 
     </ons-page>
   </ons-template>
