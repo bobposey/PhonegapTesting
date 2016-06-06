@@ -26,9 +26,25 @@
 
 var settings = {
     update: function() {
-        document.getElementById('takeoff-to-first-break-display').innerHTML = document.getElementById('takeoff-to-first-break-input').value;
-        document.getElementById('end-of-last-break-display').innerHTML = document.getElementById('end-of-last-break-input').value;
-        document.getElementById('meal-lead-time-display').innerHTML = document.getElementById('wakeup-buffer-input').value;
-        document.getElementById('wakeup-buffer-display').innerHTML = document.getElementById('wakeup-buffer-input').value;
+        $('#takeoff-to-first-break-display').innerHTML = $('#takeoff-to-first-break-input').val();
+        $('#end-of-last-break-display').innerHTML = $('#end-of-last-break-input').val();
+        $('#meal-lead-time-display').innerHTML = $('#wakeup-buffer-input').val();
+        $('#wakeup-buffer-display').innerHTML = $('#wakeup-buffer-input').val();
+        $('#calculate-wakeup-enabled').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#calculate-wakeup-options').slideDown();
+            } else {
+                $('#calculate-wakeup-options').slideUp();
+            }
+        });
+        $('#calculate-meal-enabled').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#calculate-meal-options').slideDown();
+            } else {
+                $('#calculate-meal-options').slideUp();
+            }
+        });
+
     }
+    
 }

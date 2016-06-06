@@ -8,6 +8,7 @@
 
   <!-- JS dependencies -->
   <script src="lib/onsen/js/onsenui.js"></script>
+  <script src="lib/onsen/js/jquery-2.2.4.min.js"></script>
 
   <!-- CSS dependencies -->
   <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
@@ -28,7 +29,7 @@
       <ons-page>
         <ons-list>
           <ons-list-item onclick="fn.load('home.html')" tappable>
-            Home
+            Break Calc
           </ons-list-item>
           <ons-list-item onclick="fn.load('settings.html')" tappable>
             Settings
@@ -102,7 +103,7 @@
         <ons-list-header>Takeoff Time</ons-list-header>
         <ons-list-item>
           <ons-input
-                  type="time"
+                  type="text"
                   placeholder="Takeoff Time"
                   input-id="takeoff-time"
                   onchange="settings.update()"
@@ -115,7 +116,8 @@
         <ons-list-header>Flight Time</ons-list-header>
         <ons-list-item>
           <ons-input
-                  type="time"
+                  type="text"
+                  pattern="[0-9]*"
                   placeholder="Flight Time"
                   input-id="flight-time"
                   onchange="settings.update()"
@@ -156,6 +158,15 @@
         </div>
       </ons-toolbar>
       <ons-list>
+        <ons-list-item>
+          <div class="center">
+            Calculate Wakeup Time?
+          </div>
+          <div class="right">
+            <ons-switch input-id="calculate-wakeup-enabled" onchange="settings.update()"></ons-switch>
+          </div>
+        </ons-list-item>
+        <div id="calculate-wakeup-options" style="display:none;margin-bottom:50px;">
         <ons-list-header>Wakeup until break change</ons-list-header>
         <ons-list-item>
           <ons-col width="40px" style="text-align: center; line-height: 31px;">
@@ -169,6 +180,19 @@
           <ons-col width="40px" style="text-align: center; line-height: 31px;">
           </ons-col>
         </ons-list-item>
+        </div>
+        </ons-list>
+
+        <ons-list>
+        <ons-list-item>
+          <div class="center">
+            Calculate Crew Meal time?
+          </div>
+          <div class="right">
+            <ons-switch input-id="calculate-meal-enabled" onchange="settings.update()"></ons-switch>
+          </div>
+        </ons-list-item>
+        <div id="calculate-meal-options" style="display:none;margin-bottom:50px;">
 
         <ons-list-header>Time to cook the chicken</ons-list-header>
         <ons-list-item>
@@ -183,7 +207,12 @@
           <ons-col width="40px" style="text-align: center; line-height: 31px;">
           </ons-col>
         </ons-list-item>
+        </div>
+        </ons-list>
 
+
+        <ons-list>
+        <ons-list-header></ons-list-header>
         <ons-list-item>
           <div class="center">
             Show FAR 117 legalities?
