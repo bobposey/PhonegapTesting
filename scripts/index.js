@@ -48,6 +48,7 @@ function onDeviceReady() {
     $('#flight-time').inputmask("h:s");
 }
 
+var i =0;
 var settings = {
     update: function() {
         $('#takeoff-time').inputmask("h:s");
@@ -70,7 +71,21 @@ var settings = {
                 $('#calculate-meal-options').hide();
             }
         });
+        navigator.notification.vibrate(200);
+        ons.notification.beep(1);
 
+        i++;
+        switch (i % 3) {
+            case 0:
+                StatusBar.styleBlackOpaque();
+                break;
+            case 1:
+                StatusBar.styleBlackTranslucent();
+                break;
+            case 2:
+                StatusBar.styleLightContent();
+                break;
+        }
     }
     
 }
