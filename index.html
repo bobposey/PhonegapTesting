@@ -8,7 +8,10 @@
 
   <!-- JS dependencies -->
   <script src="lib/onsen/js/onsenui.js"></script>
-  <script src="lib/onsen/js/jquery-2.2.4.min.js"></script>
+  <script src="lib/jquery/jquery-2.2.4.min.js"></script>
+  <script src="lib/inputmask/inputmask.js"></script>
+  <script src="lib/inputmask/inputmask.date.extensions.js"></script>
+  <script src="lib/inputmask/jquery.inputmask.js"></script>
 
   <!-- CSS dependencies -->
   <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
@@ -44,6 +47,17 @@
   </ons-splitter>
 
   <ons-template id="home.html">
+    <ons-page>
+      <ons-tabbar>
+        <ons-tab label="Input" page="breaks.html" active>
+        </ons-tab>
+        <ons-tab label="Results" page="results.html">
+        </ons-tab>
+      </ons-tabbar>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="breaks.html">
     <ons-page>
       <ons-toolbar>
         <div class="left">
@@ -104,6 +118,7 @@
         <ons-list-item>
           <ons-input
                   type="text"
+                  pattern="[0-9]*"
                   placeholder="Takeoff Time"
                   input-id="takeoff-time"
                   onchange="settings.update()"
@@ -127,6 +142,11 @@
 
       </ons-list>
 
+    </ons-page>
+  </ons-template>
+  <ons-template id="results.html">
+    <ons-page>
+
       <div class="results" style="clear:both">
         <ons-list>
           <ons-list-header>RESULTS</ons-list-header>
@@ -140,6 +160,7 @@
               </div>
             </div>
           </ons-list-item>
+          </ons-list>
       </div>
 
     </ons-page>

@@ -24,24 +24,31 @@
     };
 } )();
 
+
+$(document).ready(function(){
+    $('#takeoff-time').inputmask("h:s");
+    $('#flight-time').inputmask("h:s");
+});
+
+
 var settings = {
     update: function() {
-        $('#takeoff-to-first-break-display').innerHTML = $('#takeoff-to-first-break-input').val();
-        $('#end-of-last-break-display').innerHTML = $('#end-of-last-break-input').val();
-        $('#meal-lead-time-display').innerHTML = $('#wakeup-buffer-input').val();
-        $('#wakeup-buffer-display').innerHTML = $('#wakeup-buffer-input').val();
+        $('#takeoff-to-first-break-display').html($('#takeoff-to-first-break-input').val());
+        $('#end-of-last-break-display').html($('#end-of-last-break-input').val());
+        $('#meal-lead-time-display').html($('#wakeup-buffer-input').val());
+        $('#wakeup-buffer-display').html($('#wakeup-buffer-input').val());
         $('#calculate-wakeup-enabled').on('change', function() {
             if ($(this).is(':checked')) {
-                $('#calculate-wakeup-options').slideDown();
+                $('#calculate-wakeup-options').show();
             } else {
-                $('#calculate-wakeup-options').slideUp();
+                $('#calculate-wakeup-options').hide();
             }
         });
         $('#calculate-meal-enabled').on('change', function() {
             if ($(this).is(':checked')) {
-                $('#calculate-meal-options').slideDown();
+                $('#calculate-meal-options').show();
             } else {
-                $('#calculate-meal-options').slideUp();
+                $('#calculate-meal-options').hide();
             }
         });
 
