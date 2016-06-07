@@ -13,6 +13,9 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
 
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
+        $('#takeoff-time').inputmask("h:s");
+        $('#flight-time').inputmask("h:s");
+
     };
 
     function onPause() {
@@ -24,15 +27,10 @@
     };
 } )();
 
-
-$(document).ready(function(){
-    $('#takeoff-time').inputmask("h:s");
-    $('#flight-time').inputmask("h:s");
-});
-
-
 var settings = {
     update: function() {
+        $('#takeoff-time').inputmask("h:s");
+        $('#flight-time').inputmask("h:s");
         $('#takeoff-to-first-break-display').html($('#takeoff-to-first-break-input').val());
         $('#end-of-last-break-display').html($('#end-of-last-break-input').val());
         $('#meal-lead-time-display').html($('#wakeup-buffer-input').val());
