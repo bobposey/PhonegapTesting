@@ -13,8 +13,7 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
 
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
-        $('#takeoff-time').inputmask("h:s");
-        $('#flight-time').inputmask("h:s");
+
 
     };
 
@@ -26,6 +25,28 @@
         // TODO: This application has been reactivated. Restore application state here.
     };
 } )();
+
+$(document).ready(function() {
+    // are we running in native app or in a browser?
+    window.isphone = false;
+    if(document.URL.indexOf("http://") === -1
+        && document.URL.indexOf("localhost") != 7
+        && document.URL.indexOf("https://") === -1) {
+        window.isphone = true;
+    }
+
+    if( window.isphone ) {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    } else {
+        onDeviceReady();
+    }
+});
+
+function onDeviceReady() {
+    // do everything here.
+    $('#takeoff-time').inputmask("h:s");
+    $('#flight-time').inputmask("h:s");
+}
 
 var settings = {
     update: function() {
