@@ -10,4 +10,9 @@ window.fn.load = function(page) {
   var menu = document.getElementById('menu');
   content.load(page)
     .then(menu.close.bind(menu));
+
+  if (page == 'home.html') {
+    $('#takeoff-time').inputmask("h:s");
+    $('#flight-time').inputmask("h:s");
+  }
 };

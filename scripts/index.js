@@ -44,8 +44,7 @@ $(document).ready(function() {
 
 function onDeviceReady() {
     // do everything here.
-    $('#takeoff-time').inputmask("h:s");
-    $('#flight-time').inputmask("h:s");
+
 }
 
 var settings = {
