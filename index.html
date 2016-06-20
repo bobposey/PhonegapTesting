@@ -73,7 +73,21 @@
         <div class="center">
           Break Calculation
         </div>
+        <div class="right" style="padding-right:10px"><span class="currentUTCTime"></span>Z</div>
       </ons-toolbar>
+      <div class="currentUTCTime">time</div>
+      <div class="startTime">start time</div>
+      <div class="breaksStartTime">end time</div>
+      <div class="breaksEndTime">end time</div>
+      <div class="endTime">end time</div>
+      <p>Breaks</p>
+      <div class="breakDuration">break duration</div>
+      <div class="eachBreakDuration">end break duration</div>
+
+
+      <div onclick="hasPermission()">Granted?<br /><span>hasPermission()</span></div>
+      <div onclick="registerPermission()">Register<br /><span>registerPermission()</span></div>
+      <div onclick="scheduleDelayed()">In 5 sec<br /><span>schedule(1, firstAt:later)</span></div>
       <ons-list>
         <ons-list-header>Takeoff to First Break</ons-list-header>
       <ons-list-item>
@@ -146,6 +160,19 @@
         </ons-list-item>
 
       </ons-list>
+
+      <h2>Breaks</h2>
+
+      <ons-list id="breakResults">
+        <ons-list-header>
+          <div style="width:20%;float:left;">&nbsp;</div>
+          <div style="width:20%;float:left;">Start</div>
+          <div style="width:20%;float:left;">Meal</div>
+          <div style="width:20%;float:left;">Wakeup</div>
+          <div style="width:20%;float:left;">End</div>
+        </ons-list-header>
+      </ons-list>
+
 
     </ons-page>
   </ons-template>
