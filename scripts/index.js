@@ -245,13 +245,14 @@ registerPermission = function () {
 scheduleDelayed = function () {
     var now = new Date().getTime(),
         _5_sec_from_now = new Date(now + 5 * 1000);
-    // var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
+    var sound = device.platform == 'Android' ? 'file://res/sound.mp3' : 'file://res/beep.caf';
     ons.notification.alert('trying to set notification now...');
     cordova.plugins.notification.local.schedule({
         id: 17,
-        title: 'Scheduled with delay',
-        message: 'Test Message 1',
+        title: 'Time To Get Up!',
+        message: 'Crew Change at 10:11Z',
         at: _5_sec_from_now,
+        sound: sound
         // badge: 12
     });
 };
