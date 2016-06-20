@@ -247,7 +247,7 @@ scheduleDelayed = function () {
         _5_sec_from_now = new Date(now + 5 * 1000);
     var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
     cordova.plugins.notification.local.schedule({
-        id: 176,
+        id: 17612390,
         title: 'Scheduled with delay',
         text: 'Test Message 1',
         at: _5_sec_from_now,
@@ -256,5 +256,5 @@ scheduleDelayed = function () {
 };
 
 showToast = function (text) {
-    ons.notification.alert('text');
+    ons.notification.alert(text);
 };
