@@ -26,7 +26,7 @@
   <!--<plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0"/>-->
   <!--<plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1"/>-->
 
-  <plugin name="com.simplec.plugins.localnotification " spec="0.3.5" source="pgb" />
+  <plugin name="de.appplant.cordova.plugin.local-notification" />
 
   <icon src="icon.png"/>
   <!--<platform name="android">-->

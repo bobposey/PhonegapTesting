@@ -231,48 +231,29 @@ function getFormattedTime(date, includeSeconds) {
 <!--   LOCAL NOTIFICATION HELPER FUNCTIONS -->
 
 hasPermission = function () {
-    // cordova.plugins.notification.local.hasPermission(function (granted) {
-    //     showToast(granted ? 'Yes' : 'No');
-    // });
+    cordova.plugins.notification.local.hasPermission(function (granted) {
+        showToast(granted ? 'Yes' : 'No');
+    });
 };
 
 registerPermission = function () {
-    // cordova.plugins.notification.local.registerPermission(function (granted) {
-    //     showToast(granted ? 'Yes' : 'No');
-    // });
+    cordova.plugins.notification.local.registerPermission(function (granted) {
+        showToast(granted ? 'Yes' : 'No');
+    });
 };
 
 scheduleDelayed = function () {
-    window.plugins.localNotification.add({
-        fireDate        : Math.round(new Date().getTime()/1000 + 5),
-        alertBody       : "This is a local notification.",
-        action          : "View",
-        repeatInterval  : "daily",
-        soundName       : "beep.caf",
-        badge           : 0,
-        notificationId  : 123,
-        foreground      : function(notificationId){
-            alert("Hello World! This alert was triggered by notification " + notificationId);
-        },
-        background  : function(notificationId){
-            alert("Hello World! This background alert was triggered by notification " + notificationId);
-        }
+    var now = new Date().getTime(),
+        _5_sec_from_now = new Date(now + 5 * 1000);
+    var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
+    ons.notification.alert('trying to set notification now...');
+    window.plugins.notification.local.schedule({
+        id: 17,
+        title: 'Scheduled with delay',
+        message: 'Test Message 1',
+        at: _5_sec_from_now,
+        // badge: 12
     });
-    // var now = new Date().getTime(),
-    //     _5_sec_from_now = new Date(now + 5 * 1000);
-    // var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
-    // ons.notification.alert('trying to set notification now...');
-    // cordova.plugins.notification.local.schedule({
-    //     id: 17,
-    //     title: 'Scheduled with delay',
-    //     message: 'Test Message 1',
-    //     at: _5_sec_from_now,
-    //     // badge: 12
-    // });
-    // // Join BBM Meeting when user has clicked on the notification
-    // cordova.plugins.notification.local.on("click", function (notification) {
-    //    ons.notification.alert('Wake Up!');
-    // });
 };
 
 showToast = function (text) {
