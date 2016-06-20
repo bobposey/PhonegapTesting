@@ -49,7 +49,7 @@ function onDeviceReady() {
     // do everything here.
 }
 
-var startTime, endTime;
+var startTime, endTime, showMeal, mealBuffer = 30, showWakeup, wakeupBuffer = 10;
 
 var settings = {
     update: function() {
@@ -57,20 +57,30 @@ var settings = {
         $('#flight-time').inputmask("h:s");
         $('#takeoff-to-first-break-display').html($('#takeoff-to-first-break-input').val());
         $('#end-of-last-break-display').html($('#end-of-last-break-input').val());
-        $('#meal-lead-time-display').html($('#wakeup-buffer-input').val());
+        $('#meal-lead-time-display').html($('#meal-lead-time-input').val());
+        if ($('#meal-lead-time-input').val()) {
+            mealBuffer = parseInt($('#meal-lead-time-input').val());
+        }
         $('#wakeup-buffer-display').html($('#wakeup-buffer-input').val());
+        if ($('#wakeup-buffer-input').val()) {
+            wakeupBuffer = parseInt($('#wakeup-buffer-input').val());
+        }
         $('#calculate-wakeup-enabled').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#calculate-wakeup-options').show();
+                showWakeup = true;
             } else {
                 $('#calculate-wakeup-options').hide();
+                showWakeup = false;
             }
         });
         $('#calculate-meal-enabled').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#calculate-meal-options').show();
+                showMeal = true;
             } else {
                 $('#calculate-meal-options').hide();
+                showMeal = false;
             }
         });
 
@@ -79,6 +89,18 @@ var settings = {
 }
 
 function calculateBreaks() {
+    showMeal ?  $('.showMeal').show() : $('.showMeal').hide();
+    showWakeup ?  $('.showWakeup').show() : $('.showWakeup').hide();
+    var columns = 5;
+    if (!showMeal) {
+        columns--;
+    }
+    if (!showWakeup) {
+        columns--;
+    }
+    var width = Math.round(100/columns, 4);
+    $('.breaksHeader').css('width', width + '%');
+
     // do the time stuff...
     // we'll only work with the epoch dates to keep things consistent and date free
     var takeoffTime = $('#takeoff-time').val();
@@ -99,40 +121,50 @@ function calculateBreaks() {
     endTime.setUTCHours(parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]));
     endTime.setUTCMinutes(parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]));
 
-    showTime('.startTime', startTime);
-    showTime('.endTime', endTime);
-
     var breaksStartTime = new Date(startTime.getTime());
     breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt($('#takeoff-to-first-break-input').val()));
 
     var breaksEndTime = new Date(endTime.getTime());
     breaksEndTime.setMinutes(breaksEndTime.getMinutes() - parseInt($('#end-of-last-break-input').val()));
     
-    showTime('.breaksStartTime', breaksStartTime);
-    showTime('.breaksEndTime', breaksEndTime);
-
     var breakDurationSeconds = breaksEndTime.getTime() - breaksStartTime.getTime();
     var eachBreakDuration = $('#double-augmented-switch').prop('checked') ?
         breakDurationSeconds / 2 :
         breakDurationSeconds / 3;
 
-    $('.breakDuration').html(breakDurationSeconds + ' // ' + breakDurationSeconds / 1000 / 60 + ' minutes');
-    $('.eachBreakDuration').html(eachBreakDuration + ' // ' + eachBreakDuration / 1000 / 60 + ' minutes');
+    var eachBreakDurationMinutes = Math.floor(eachBreakDuration/(60*1000)) % 60;
+    if (eachBreakDurationMinutes < 10) {
+        eachBreakDurationMinutes = "0" + eachBreakDurationMinutes;
+    }
+
+    $('#eachBreakDuration').html(
+        '(' +
+        Math.floor(eachBreakDuration / 1000 / 60 / 60) + ':' +
+        eachBreakDurationMinutes +
+        ')'
+    );
 
     $('#breakResults ons-list-item').remove();
     // first break
-    var firstBreakEndTime = new Date(breaksStartTime.getTime());
-    firstBreakEndTime.setUTCMilliseconds(eachBreakDuration);
-    var secondBreakEndTime = new Date(firstBreakEndTime.getTime());
-    secondBreakEndTime.setUTCMilliseconds(eachBreakDuration);
-    addBreakEntry(1, getFormattedTime(breaksStartTime), 'n/a', 'n/a', getFormattedTime(firstBreakEndTime));
-    addBreakEntry(2, getFormattedTime(firstBreakEndTime), 'n/a', 'n/a', getFormattedTime(secondBreakEndTime));
-    if ( ! $('#double-augmented-switch').prop('checked') ) {
-        var thirdBreakEndTime = new Date(secondBreakEndTime.getTime());
-        thirdBreakEndTime.setUTCMilliseconds(eachBreakDuration);
-        addBreakEntry(3, getFormattedTime(secondBreakEndTime), 'n/a', 'n/a', getFormattedTime(thirdBreakEndTime));
+    var currentBreakStartTime = new Date(breaksStartTime.getTime());
+    var currentBreakEndTime, currentMealTime, currentWakeupTime;
+    var numberBreaks = $('#double-augmented-switch').prop('checked') ? 2 : 3;
+    var mealLeadTime = mealBuffer * 60 * 1000;
+    var wakeupLeadTime = wakeupBuffer * 60 * 1000;
+    for (var $i=1; $i <= numberBreaks; $i++) {
+        currentBreakEndTime = new Date(currentBreakStartTime.getTime() + eachBreakDuration);
+        currentMealTime = new Date(currentBreakEndTime - mealLeadTime);
+        currentWakeupTime = new Date(currentBreakEndTime - wakeupLeadTime);
+        addBreakEntry(
+            'Break #' + $i,
+            getFormattedTime(currentBreakStartTime),
+            getFormattedTime(currentMealTime),
+            getFormattedTime(currentWakeupTime),
+            getFormattedTime(currentBreakEndTime)
+        );
+        currentBreakStartTime = new Date(currentBreakEndTime.getTime());
     }
-
+    addBreakEntry('Land', getFormattedTime(endTime), ' ', ' ', ' ');
 }
 
 function clearBreaks() {
@@ -141,11 +173,24 @@ function clearBreaks() {
 }
 
 function addBreakEntry(breakNumber, start, meal, wakeup, end) {
-    var html = '<div style="width:20%;float:left;">Break #' + breakNumber + '</div>';
-    html += '<div style="width:20%;float:left;">' + start + '</div>';
-    html += '<div style="width:20%;float:left;">' + meal + '</div>';
-    html += '<div style="width:20%;float:left;"><b>' + wakeup + '</b></div>';
-    html += '<div style="width:20%;float:left;">' + end + '</div>';
+
+    var columns = 5;
+    if (!showMeal) {
+        columns--;
+    }
+    if (!showWakeup) {
+        columns--;
+    }
+    var width = Math.round(100/columns, 4);
+    var html = '<div style="width:' + width + '%;float:left;">' + breakNumber + '</div>';
+    html += '<div style="width:' + width + '%;float:left;">' + start + '</div>';
+    if (showMeal) {
+        html += '<div style="width:' + width + '%;float:left;">' + meal + '</div>';
+    }
+    if (showWakeup) {
+        html += '<div style="width:' + width + '%;float:left;"><b>' + wakeup + '</b></div>';
+    }
+    html += '<div style="width:' + width + '%;float:left;">' + end + '</div>';
 
     $('#breakResults').append("<ons-list-item>" + html + "</ons-list-item>");
 //    ons.compile($('#myList')[0]);
@@ -211,15 +256,5 @@ scheduleDelayed = function () {
 };
 
 showToast = function (text) {
-    setTimeout(function () {
-        if (device.platform != 'windows') {
-            window.plugins.toast.showShortBottom(text);
-        } else {
-            showDialog(text);
-        }
-    }, 100);
-};
-
-showDialog = function (text) {
     ons.notification.alert('text');
 };

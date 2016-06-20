@@ -15,4 +15,5 @@ window.fn.load = function(page) {
     $('#takeoff-time').inputmask("h:s");
     $('#flight-time').inputmask("h:s");
   }
+
 };

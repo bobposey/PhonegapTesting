@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <title>Bob's First App!</title>
+  <title>Breakulator</title>
 
   <!-- JS dependencies -->
   <script src="lib/onsen/js/onsenui.js"></script>
@@ -24,6 +24,10 @@
     #flight-time, #takeoff-time {
       font-size: 1.3em;
     }
+    .breaksHeader {
+      width: 20%;
+      float: left;
+    }
   </style>
 </head>
 <body>
@@ -36,7 +40,7 @@
     <ons-splitter-side id="menu" side="left" width="220px" collapse>
       <ons-page>
         <ons-list>
-          <ons-list-item onclick="fn.load('home.html')" tappable>
+          <ons-list-item onclick="fn.load('breaks.html')" tappable>
             Break Calc
           </ons-list-item>
           <ons-list-item onclick="fn.load('settings.html')" tappable>
@@ -48,19 +52,8 @@
         </ons-list>
       </ons-page>
     </ons-splitter-side>
-    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+    <ons-splitter-content id="content" page="breaks.html"></ons-splitter-content>
   </ons-splitter>
-
-  <ons-template id="home.html">
-    <ons-page>
-      <ons-tabbar>
-        <ons-tab label="Input" page="breaks.html" active>
-        </ons-tab>
-        <ons-tab label="Results" page="results.html">
-        </ons-tab>
-      </ons-tabbar>
-    </ons-page>
-  </ons-template>
 
   <ons-template id="breaks.html">
     <ons-page>
@@ -75,19 +68,6 @@
         </div>
         <div class="right" style="padding-right:10px"><span class="currentUTCTime"></span>Z</div>
       </ons-toolbar>
-      <div class="currentUTCTime">time</div>
-      <div class="startTime">start time</div>
-      <div class="breaksStartTime">end time</div>
-      <div class="breaksEndTime">end time</div>
-      <div class="endTime">end time</div>
-      <p>Breaks</p>
-      <div class="breakDuration">break duration</div>
-      <div class="eachBreakDuration">end break duration</div>
-
-
-      <div onclick="hasPermission()">Granted?<br /><span>hasPermission()</span></div>
-      <div onclick="registerPermission()">Register<br /><span>registerPermission()</span></div>
-      <div onclick="scheduleDelayed()">In 5 sec<br /><span>schedule(1, firstAt:later)</span></div>
       <ons-list>
         <ons-list-header>Takeoff to First Break</ons-list-header>
       <ons-list-item>
@@ -161,15 +141,14 @@
 
       </ons-list>
 
-      <h2>Breaks</h2>
-
-      <ons-list id="breakResults">
+      <ons-list id="breakResults" style="clear:both;padding-top:20px;">
+        <div style="font-size:1.5em;margin-bottom:-20px;padding-left:15px;">Breaks <span id="eachBreakDuration"></span></div>
         <ons-list-header>
-          <div style="width:20%;float:left;">&nbsp;</div>
-          <div style="width:20%;float:left;">Start</div>
-          <div style="width:20%;float:left;">Meal</div>
-          <div style="width:20%;float:left;">Wakeup</div>
-          <div style="width:20%;float:left;">End</div>
+          <div class="breaksHeader">&nbsp;</div>
+          <div class="breaksHeader">Start</div>
+          <div class="breaksHeader showMeal">Meal</div>
+          <div class="breaksHeader showWakeup">Wakeup</div>
+          <div class="breaksHeader">End</div>
         </ons-list-header>
       </ons-list>
 
@@ -177,39 +156,6 @@
     </ons-page>
   </ons-template>
 
-
-
-  <ons-template id="results.html">
-    <ons-page>
-      <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-        <div class="center">
-          Break Schedule
-        </div>
-      </ons-toolbar>
-
-      <div class="results" style="clear:both">
-        <ons-list>
-          <ons-list-header>RESULTS</ons-list-header>
-          <ons-list-item>
-            <div class="left">
-              <div class="list__item__time">11:45</div>
-            </div>
-            <div class="center">
-              <div class="list__item_action">
-                End of First Break
-              </div>
-            </div>
-          </ons-list-item>
-          </ons-list>
-      </div>
-
-    </ons-page>
-  </ons-template>
 
   <ons-template id="settings.html">
     <ons-page>
@@ -247,9 +193,6 @@
           </ons-col>
         </ons-list-item>
         </div>
-        </ons-list>
-
-        <ons-list>
         <ons-list-item>
           <div class="center">
             Calculate Crew Meal time?
@@ -284,6 +227,13 @@
         </ons-list-item>
 
       </ons-list>
+
+      <div style="background-color:#eeeeee;border:1px solid #ccc; margin: 10px;">
+        <div onclick="hasPermission()">Granted?<br /><span>hasPermission()</span></div>
+        <div onclick="registerPermission()">Register<br /><span>registerPermission()</span></div>
+        <div onclick="scheduleDelayed()">In 5 sec<br /><span>schedule(1, firstAt:later)</span></div>
+      </div>
+
     </ons-page>
   </ons-template>
 
