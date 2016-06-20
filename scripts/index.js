@@ -127,7 +127,7 @@ function calculateBreaks() {
     secondBreakEndTime.setUTCMilliseconds(eachBreakDuration);
     addBreakEntry(1, getFormattedTime(breaksStartTime), 'n/a', 'n/a', getFormattedTime(firstBreakEndTime));
     addBreakEntry(2, getFormattedTime(firstBreakEndTime), 'n/a', 'n/a', getFormattedTime(secondBreakEndTime));
-    if ( $('#double-augmented-switch').prop('checked') ) {
+    if ( ! $('#double-augmented-switch').prop('checked') ) {
         var thirdBreakEndTime = new Date(secondBreakEndTime.getTime());
         thirdBreakEndTime.setUTCMilliseconds(eachBreakDuration);
         addBreakEntry(3, getFormattedTime(secondBreakEndTime), 'n/a', 'n/a', getFormattedTime(thirdBreakEndTime));
@@ -202,11 +202,10 @@ scheduleDelayed = function () {
         _5_sec_from_now = new Date(now + 5 * 1000);
     var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
     cordova.plugins.notification.local.schedule({
-        id: 1,
+        id: 176,
         title: 'Scheduled with delay',
         text: 'Test Message 1',
         at: _5_sec_from_now,
-        sound: sound,
         badge: 12
     });
 };
@@ -222,12 +221,5 @@ showToast = function (text) {
 };
 
 showDialog = function (text) {
-    if (dialog) {
-        dialog.content = text;
-        return;
-    }
-    dialog = new Windows.UI.Popups.MessageDialog(text);
-    dialog.showAsync().done(function () {
-        dialog = null;
-    });
+    ons.notification.alert('text');
 };
