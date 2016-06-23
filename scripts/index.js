@@ -176,7 +176,7 @@ function calculateBreaks() {
     // first break
     var currentBreakStartTime = new Date(breaksStartTime.getTime());
     var currentBreakEndTime, currentMealTime, currentWakeupTime;
-    var numberBreaks = (breakType == 'single') ? 2 : 3;
+    var numberBreaks = (breakType == 'double') ? 2 : 3;
     var mealLeadTime = mealBuffer * 60 * 1000;
     var wakeupLeadTime = wakeupBuffer * 60 * 1000;
     for (var $i=1; $i <= numberBreaks; $i++) {
