@@ -49,22 +49,34 @@ function onDeviceReady() {
     // do everything here.
 }
 
-var startTime, endTime, showMeal, mealBuffer = 30, showWakeup, wakeupBuffer = 10;
-
 var settings = {
     update: function() {
-        $('#takeoff-time').inputmask("h:s");
-        $('#flight-time').inputmask("h:s");
-        $('#takeoff-to-first-break-display').html($('#takeoff-to-first-break-input').val());
-        $('#end-of-last-break-display').html($('#end-of-last-break-input').val());
-        $('#meal-lead-time-display').html($('#meal-lead-time-input').val());
+        // $('#takeoff-time').inputmask("h:s");
+        // $('#flight-time').inputmask("h:s");
+
+        var takeoffToFirstBreak = $('#takeoff-to-first-break-input').val();
+        $('#takeoff-to-first-break-display').html(takeoffToFirstBreak);
+        settingsService.set('takeoffToFirstBreak', takeoffToFirstBreak);
+
+        var endOfLastBreak = $('#end-of-last-break-input').val();
+        $('#end-of-last-break-display').html(endOfLastBreak);
+        settingsService.set('endOfLastBreak', endOfLastBreak);
+
+        var mealBuffer= $('#meal-lead-time-input').val();
+        $('#meal-lead-time-display').html(mealBuffer);
+
         if ($('#meal-lead-time-input').val()) {
-            mealBuffer = parseInt($('#meal-lead-time-input').val());
+            mealBuffer = parseInt(mealBuffer);
+            settingsService.set('mealBuffer', mealBuffer)
         }
-        $('#wakeup-buffer-display').html($('#wakeup-buffer-input').val());
-        if ($('#wakeup-buffer-input').val()) {
+
+        var wakeupBuffer = $('#wakeup-buffer-input').val();
+        $('#wakeup-buffer-display').html(wakeupBuffer);
+        if (wakeupBuffer) {
             wakeupBuffer = parseInt($('#wakeup-buffer-input').val());
+            settingsService.set('wakeupBuffer', wakeupBuffer);
         }
+
         $('#calculate-wakeup-enabled').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#calculate-wakeup-options').show();
@@ -73,7 +85,9 @@ var settings = {
                 $('#calculate-wakeup-options').hide();
                 showWakeup = false;
             }
+            settingsService.set('showWakeup', showWakeup);
         });
+        
         $('#calculate-meal-enabled').on('change', function() {
             if ($(this).is(':checked')) {
                 $('#calculate-meal-options').show();
@@ -82,15 +96,30 @@ var settings = {
                 $('#calculate-meal-options').hide();
                 showMeal = false;
             }
+            settingsService.set('showMeal', showMeal);
         });
 
+        settingsService.set('takeoffTime', $('#takeoff-time').val());
+        settingsService.set('flightTime', $('#flight-time').val());
+        settingsService.set('breakType', $('#double-augmented-switch').prop('checked') ? 'double': 'single');
         calculateBreaks();
     }
-}
+};
 
 function calculateBreaks() {
-    showMeal ?  $('.showMeal').show() : $('.showMeal').hide();
-    showWakeup ?  $('.showWakeup').show() : $('.showWakeup').hide();
+    var showMeal = settingsService.get('showMeal');
+    var showWakeup = settingsService.get('showWakeup');
+    var takeoffTime = settingsService.get('takeoffTime');
+    var flightTime = settingsService.get('flightTime');
+    var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
+    var endOfLastBreak = settingsService.get('endOfLastBreak');
+    var wakeupBuffer = settingsService.get('wakeupBuffer');
+    var mealBuffer = settingsService.get('mealBuffer');
+    var breakType = settingsService.get('breakType');
+
+    (showMeal == 'true') ?  $('.showMeal').show() : $('.showMeal').hide();
+    (showWakeup == 'true') ?  $('.showWakeup').show() : $('.showWakeup').hide();
+
     var columns = 5;
     if (!showMeal) {
         columns--;
@@ -101,16 +130,14 @@ function calculateBreaks() {
     var width = Math.round(100/columns, 4);
     $('.breaksHeader').css('width', width + '%');
 
+    // validation (weak)
+    var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
+    if (!patt.test(takeoffTime) || !patt.test(flightTime)) {
+        return clearBreaks();
+    }
+
     // do the time stuff...
     // we'll only work with the epoch dates to keep things consistent and date free
-    var takeoffTime = $('#takeoff-time').val();
-    if (!takeoffTime || takeoffTime.indexOf(":") == -1) {
-        return clearBreaks();
-    }
-    var flightTime = $('#flight-time').val();
-    if (!flightTime || flightTime.indexOf(":") == -1) {
-        return clearBreaks();
-    }
 
     var takeoffTimeArray = takeoffTime.split(':');
     var flightTimeArray = flightTime.split(':');
@@ -122,13 +149,14 @@ function calculateBreaks() {
     endTime.setUTCMinutes(parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]));
 
     var breaksStartTime = new Date(startTime.getTime());
-    breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt($('#takeoff-to-first-break-input').val()));
+    breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt(takeoffToFirstBreak));
 
     var breaksEndTime = new Date(endTime.getTime());
-    breaksEndTime.setMinutes(breaksEndTime.getMinutes() - parseInt($('#end-of-last-break-input').val()));
+    breaksEndTime.setMinutes(breaksEndTime.getMinutes() - parseInt(endOfLastBreak));
     
     var breakDurationSeconds = breaksEndTime.getTime() - breaksStartTime.getTime();
-    var eachBreakDuration = $('#double-augmented-switch').prop('checked') ?
+
+    var eachBreakDuration = (breakType == 'double')  ?
         breakDurationSeconds / 2 :
         breakDurationSeconds / 3;
 
@@ -144,11 +172,11 @@ function calculateBreaks() {
         ')'
     );
 
-    $('#breakResults ons-list-item').remove();
+    clearBreaks();
     // first break
     var currentBreakStartTime = new Date(breaksStartTime.getTime());
     var currentBreakEndTime, currentMealTime, currentWakeupTime;
-    var numberBreaks = $('#double-augmented-switch').prop('checked') ? 2 : 3;
+    var numberBreaks = (breakType == 'single') ? 2 : 3;
     var mealLeadTime = mealBuffer * 60 * 1000;
     var wakeupLeadTime = wakeupBuffer * 60 * 1000;
     for (var $i=1; $i <= numberBreaks; $i++) {
@@ -168,11 +196,14 @@ function calculateBreaks() {
 }
 
 function clearBreaks() {
-    $('.startTime').html('');
-    $('.endTime').html('');
+    $('#breakResults ons-list-item').remove();
+
 }
 
 function addBreakEntry(breakNumber, start, meal, wakeup, end) {
+
+    var showMeal = settingsService.get('showMeal');
+    var showWakeup = settingsService.get('showMeal');
 
     var columns = 5;
     if (!showMeal) {
@@ -201,12 +232,12 @@ showUtcTime = function () {
     var now = new Date();
     var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
     showTime('.currentUTCTime', now_utc, true);
-}
+};
 
 function showTime(target, date, includeSeconds) {
     var timeOutput = getFormattedTime(date, includeSeconds);
     $(target).html(timeOutput);
-}
+};
 
 function getFormattedTime(date, includeSeconds) {
     var hour = date.getUTCHours();
@@ -226,37 +257,66 @@ function getFormattedTime(date, includeSeconds) {
         timeOutput += '.' + sec;
     }
     return timeOutput;
-}
-
-<!--   LOCAL NOTIFICATION HELPER FUNCTIONS -->
-
-hasPermission = function () {
-    cordova.plugins.notification.local.hasPermission(function (granted) {
-        showToast(granted ? 'Yes' : 'No');
-    });
 };
 
-registerPermission = function () {
-    cordova.plugins.notification.local.registerPermission(function (granted) {
-        showToast(granted ? 'Yes' : 'No');
-    });
-};
 
-scheduleDelayed = function () {
-    var now = new Date().getTime(),
-        _5_sec_from_now = new Date(now + 5 * 1000);
-    var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
-    ons.notification.alert('trying to set notification now...');
-    cordova.plugins.notification.local.schedule({
-        id: 17,
-        title: 'Time To Get Up!',
-        message: 'Crew Change at 10:11Z',
-        at: _5_sec_from_now,
-        sound: sound
-        // badge: 12
-    });
-};
 
-showToast = function (text) {
-    ons.notification.alert(text);
-};
+document.addEventListener("init", function(event) {
+    var page = event.target.id;
+    if (page == 'breaks.html') {
+        $('#takeoff-time').inputmask("h:s");
+        $('#flight-time').inputmask("h:s");
+        // load settings
+        var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
+        $('#takeoff-to-first-break-input').val(takeoffToFirstBreak);
+        $('#takeoff-to-first-break-display').html(takeoffToFirstBreak);
+
+        var endOfLastBreak = settingsService.get('endOfLastBreak')
+        $('#end-of-last-break-input').val(endOfLastBreak);
+        $('#end-of-last-break-display').html(endOfLastBreak);
+
+        $('#takeoff-time').val(settingsService.get('takeoffTime'));
+        $('#flight-time').val(settingsService.get('flightTime'));
+
+        var breakType = settingsService.get('breakType');
+        if (breakType == 'single') {
+            $('#double-augmented-switch')[0].checked = false;
+        } else {
+            $('#double-augmented-switch')[0].checked = true;
+        }
+        showUtcTime();
+        calculateBreaks();
+    }
+
+
+    if (page == "settings.html") {
+        // calculate wakeup time
+        var showWakeup = settingsService.get('showWakeup');
+        if (showWakeup == "true") {
+            $('#calculate-wakeup-enabled')[0].checked = true;
+            $('#calculate-wakeup-options').show();
+        } else {
+            $('#calculate-wakeup-enabled')[0].checked = false;
+            $('#calculate-wakeup-options').hide();
+        }
+        var wakeupBuffer = settingsService.get('wakeupBuffer');
+        $('#wakeup-buffer-input').val(wakeupBuffer);
+        $('#wakeup-buffer-display').html(wakeupBuffer);
+
+        // calculate crew meal time
+        var showMeal = settingsService.get('showMeal');
+        if (showMeal == "true") {
+            $('#calculate-meal-enabled')[0].checked = true;
+            $('#calculate-meal-options').show();
+        } else {
+            $('#calculate-meal-enabled')[0].checked = false;
+            $('#calculate-meal-options').hide();
+        }
+        var mealBuffer = settingsService.get('mealBuffer');
+        $('#meal-lead-time-input').val(mealBuffer);
+        $('#meal-lead-time-display').html(mealBuffer);
+
+        showUtcTime();
+        // show FAR 117 legalities
+    }
+}, false);

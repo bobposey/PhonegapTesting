@@ -1,0 +1,98 @@
+<ons-page id="breaks.html">
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+            Break Calculation
+        </div>
+        <div class="right" style="padding-right:10px"><span class="currentUTCTime"></span>Z</div>
+    </ons-toolbar>
+    <ons-list>
+        <ons-list-header>Takeoff to First Break</ons-list-header>
+        <ons-list-item>
+            <ons-col width="40px" style="text-align: center; line-height: 31px;">
+                <label class="left" id="takeoff-to-first-break-display">
+
+                </label>
+            </ons-col>
+            <ons-col>
+                <ons-range style="width: 100%;" value="15" min="0" max="60" oninput="settings.update()" onchange="settings.update()" id="takeoff-to-first-break-input"></ons-range>
+            </ons-col>
+            <ons-col width="40px" style="text-align: center; line-height: 31px;">
+            </ons-col>
+        </ons-list-item>
+    </ons-list>
+
+    <ons-list>
+        <ons-list-header>End of Last Break until touchdown</ons-list-header>
+        <ons-list-item>
+            <ons-col width="40px" style="text-align: center; line-height: 31px;">
+                <label class="left" id="end-of-last-break-display">
+
+                </label>
+            </ons-col>
+            <ons-col>
+                <ons-range style="width: 100%;" value="50" min="0" max="120" oninput="settings.update()" onchange="settings.update()" id="end-of-last-break-input"></ons-range>
+            </ons-col>
+            <ons-col width="40px" style="text-align: center; line-height: 31px;">
+            </ons-col>
+        </ons-list-item>
+    </ons-list>
+
+    <ons-list>
+        <ons-list-header></ons-list-header>
+        <ons-list-item>
+            <div class="center">
+                Double Augmented (2 breaks)?
+            </div>
+            <div class="right">
+                <ons-switch id="double-augmented-switch" onchange="settings.update()"></ons-switch>
+            </div>
+        </ons-list-item>
+    </ons-list>
+
+    <ons-list  style="width:50%; float:left">
+        <ons-list-header>Takeoff Time</ons-list-header>
+        <ons-list-item>
+            <ons-input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="Takeoff Time"
+                    input-id="takeoff-time"
+                    onchange="settings.update()"
+            >
+            </ons-input>
+        </ons-list-item>
+    </ons-list>
+
+    <ons-list style="width:50%; float:right">
+        <ons-list-header>Flight Time</ons-list-header>
+        <ons-list-item>
+            <ons-input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="Flight Time"
+                    input-id="flight-time"
+                    onchange="settings.update()"
+            >
+            </ons-input>
+        </ons-list-item>
+
+    </ons-list>
+
+    <ons-list id="breakResults" style="clear:both;padding-top:20px;">
+        <div style="font-size:1.5em;margin-bottom:-20px;padding-left:15px;">Breaks <span id="eachBreakDuration"></span></div>
+        <ons-list-header>
+            <div class="breaksHeader">&nbsp;</div>
+            <div class="breaksHeader">Start</div>
+            <div class="breaksHeader showMeal">Meal</div>
+            <div class="breaksHeader showWakeup">Wakeup</div>
+            <div class="breaksHeader">End</div>
+        </ons-list-header>
+    </ons-list>
+
+
+</ons-page>
