@@ -11,13 +11,12 @@
     </ons-toolbar>
 
     <ons-list  style="width:30%; float:left">
-        <ons-list-header>Takeoff Time</ons-list-header>
+        <ons-list-header>Off Time</ons-list-header>
         <ons-list-item>
             <ons-input
                     type="text"
                     pattern="[0-9]*"
-                    placeholder="Takeoff Time"
-                    input-id="takeoff-time"
+                    input-id="off-time"
                     onchange="settings.update('off')"
             >
             </ons-input>
@@ -30,7 +29,6 @@
             <ons-input
                     type="text"
                     pattern="[0-9]*"
-                    placeholder="Flight Time"
                     input-id="flight-time"
                     onchange="settings.update('flight')"
             >
@@ -45,7 +43,6 @@
             <ons-input
                     type="text"
                     pattern="[0-9]*"
-                    placeholder="On Time"
                     input-id="on-time"
                     onchange="settings.update('on')"
             >
@@ -65,15 +62,15 @@
 
     <!-- start sliders -->
     <ons-list style="clear:both;">
-        <ons-list-header>Takeoff to First Break</ons-list-header>
+        <ons-list-header>Minutes Before First Break Starts</ons-list-header>
         <ons-list-item>
             <ons-col width="40px" style="text-align: center; line-height: 31px;">
-                <label class="left" id="takeoff-to-first-break-display">
+                <label class="left" id="off-to-first-break-display">
 
                 </label>
             </ons-col>
             <ons-col>
-                <ons-range style="width: 100%;" value="15" min="0" max="60" oninput="settings.update()" onchange="settings.update()" id="takeoff-to-first-break-input"></ons-range>
+                <ons-range style="width: 100%;" value="15" min="0" max="60" oninput="settings.update()" onchange="settings.update()" id="off-to-first-break-input"></ons-range>
             </ons-col>
             <ons-col width="40px" style="text-align: center; line-height: 31px;">
             </ons-col>

@@ -55,9 +55,9 @@ var settings = {
         if (typeof ele !== "undefined") {
             this.calculateMissingFlightTime(ele);
         }
-        var takeoffToFirstBreak = $('#takeoff-to-first-break-input').val();
-        $('#takeoff-to-first-break-display').html(takeoffToFirstBreak);
-        settingsService.set('takeoffToFirstBreak', takeoffToFirstBreak);
+        var offToFirstBreak = $('#off-to-first-break-input').val();
+        $('#off-to-first-break-display').html(offToFirstBreak);
+        settingsService.set('offToFirstBreak', offToFirstBreak);
 
         var endOfLastBreak = $('#end-of-last-break-input').val();
         $('#end-of-last-break-display').html(endOfLastBreak);
@@ -100,7 +100,7 @@ var settings = {
             settingsService.set('showMeal', showMeal);
         });
 
-        settingsService.set('takeoffTime', $('#takeoff-time').val());
+        settingsService.set('offTime', $('#off-time').val());
         settingsService.set('flightTime', $('#flight-time').val());
         settingsService.set('onTime', $('#on-time').val());
         settingsService.set('breakType', $('#double-augmented-switch').prop('checked') ? 'double': 'single');
@@ -108,13 +108,13 @@ var settings = {
     },
 
     calculateMissingFlightTime: function(ele) {
-        var takeoffTime = $('#takeoff-time').val();
+        var offTime = $('#off-time').val();
         var flightTime = $('#flight-time').val();
         var onTime = $('#on-time').val();
         var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
 
         if (ele == 'off') {
-            if (!patt.test(takeoffTime)) {
+            if (!patt.test(offTime)) {
                 return;
             }
             if (patt.test(flightTime)) {
@@ -130,7 +130,7 @@ var settings = {
             if (!patt.test(flightTime)) {
                 return;
             }
-            if (patt.test(takeoffTime)) {
+            if (patt.test(offTime)) {
                 return this.solveMissingFlightTime('on');
             }
             if (patt.test(onTime)) {
@@ -143,7 +143,7 @@ var settings = {
             if (!patt.test(onTime)) {
                 return;
             }
-            if (patt.test(takeoffTime)) {
+            if (patt.test(offTime)) {
                 return this.solveMissingFlightTime('flight');
             }
             if (patt.test(flightTime)) {
@@ -154,10 +154,10 @@ var settings = {
     },
 
     solveMissingFlightTime: function(ele) {
-        var takeoffTime = $('#takeoff-time').val();
+        var offTime = $('#off-time').val();
         var flightTime = $('#flight-time').val();
         var onTime = $('#on-time').val();
-        var takeoffTimeArray = takeoffTime.split(':');
+        var offTimeArray = offTime.split(':');
         var flightTimeArray = flightTime.split(':');
         var onTimeArray = onTime.split(':');
 
@@ -172,15 +172,15 @@ var settings = {
                     0,
                     0
                 ));
-                $('#takeoff-time').val(getFormattedTime(offTimeDate, false));
+                $('#off-time').val(getFormattedTime(offTimeDate, false));
                 break;
             case 'flight':
                 var flightTimeDate = new Date( Date.UTC(
                     70,
                     0,
                     1,
-                    parseInt(onTimeArray[0]) - parseInt(takeoffTimeArray[0]),
-                    parseInt(onTimeArray[1]) - parseInt(takeoffTimeArray[1]),
+                    parseInt(onTimeArray[0]) - parseInt(offTimeArray[0]),
+                    parseInt(onTimeArray[1]) - parseInt(offTimeArray[1]),
                     0,
                     0
                 ));
@@ -194,8 +194,8 @@ var settings = {
                     70,
                     0,
                     1,
-                    parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]),
-                    parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]),
+                    parseInt(offTimeArray[0]) + parseInt(flightTimeArray[0]),
+                    parseInt(offTimeArray[1]) + parseInt(flightTimeArray[1]),
                     0,
                     0
                 ));
@@ -210,9 +210,9 @@ function calculateBreaks() {
     showMeal = showMeal === 'true';
     var showWakeup = settingsService.get('showWakeup');
     showWakeup = showWakeup === 'true';
-    var takeoffTime = settingsService.get('takeoffTime');
+    var offTime = settingsService.get('offTime');
     var flightTime = settingsService.get('flightTime');
-    var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
+    var offToFirstBreak = settingsService.get('offToFirstBreak');
     var endOfLastBreak = settingsService.get('endOfLastBreak');
     var wakeupBuffer = settingsService.get('wakeupBuffer');
     var mealBuffer = settingsService.get('mealBuffer');
@@ -233,21 +233,21 @@ function calculateBreaks() {
 
     // validation (weak)
     var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
-    if (!patt.test(takeoffTime) || !patt.test(flightTime)) {
+    if (!patt.test(offTime) || !patt.test(flightTime)) {
         return clearBreaks();
     }
 
     // do the time stuff...
     // we'll only work with the epoch dates to keep things consistent and date free
 
-    var takeoffTimeArray = takeoffTime.split(':');
+    var offTimeArray = offTime.split(':');
     var flightTimeArray = flightTime.split(':');
 
-    var startTime = new Date( Date.UTC(70, 0, 1, parseInt(takeoffTimeArray[0]), parseInt(takeoffTimeArray[1]), 0, 0));
-    var endTime = new Date( Date.UTC(70, 0, 1, parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]), parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]), 0, 0));
+    var startTime = new Date( Date.UTC(70, 0, 1, parseInt(offTimeArray[0]), parseInt(offTimeArray[1]), 0, 0));
+    var endTime = new Date( Date.UTC(70, 0, 1, parseInt(offTimeArray[0]) + parseInt(flightTimeArray[0]), parseInt(offTimeArray[1]) + parseInt(flightTimeArray[1]), 0, 0));
 
     var breaksStartTime = new Date(startTime.getTime());
-    breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt(takeoffToFirstBreak));
+    breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt(offToFirstBreak));
 
     var breaksEndTime = new Date(endTime.getTime());
     breaksEndTime.setMinutes(breaksEndTime.getMinutes() - parseInt(endOfLastBreak));
@@ -393,11 +393,11 @@ function resetFlightTimes() {
             // -1: Cancel
             // 0-: Button index from the left
             if (index === 0) {
-                $('#takeoff-time').val('');
+                $('#off-time').val('');
                 $('#flight-time').val('');
                 $('#on-time').val('');
                 clearBreaks();
-                settingsService.remove('takeoffTime');
+                settingsService.remove('offTime');
                 settingsService.remove('flightTime');
                 settingsService.remove('onTime');
             }
@@ -408,19 +408,19 @@ function resetFlightTimes() {
 document.addEventListener("init", function(event) {
     var page = event.target.id;
     if (page == 'breaks.html') {
-        $('#takeoff-time').inputmask("h:s");
+        $('#off-time').inputmask("h:s");
         $('#flight-time').inputmask("h:s");
         $('#on-time').inputmask("h:s");
         // load settings
-        var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
-        $('#takeoff-to-first-break-input').val(takeoffToFirstBreak);
-        $('#takeoff-to-first-break-display').html(takeoffToFirstBreak);
+        var offToFirstBreak = settingsService.get('offToFirstBreak');
+        $('#off-to-first-break-input').val(offToFirstBreak);
+        $('#off-to-first-break-display').html(offToFirstBreak);
 
         var endOfLastBreak = settingsService.get('endOfLastBreak')
         $('#end-of-last-break-input').val(endOfLastBreak);
         $('#end-of-last-break-display').html(endOfLastBreak);
 
-        $('#takeoff-time').val(settingsService.get('takeoffTime'));
+        $('#off-time').val(settingsService.get('offTime'));
         $('#flight-time').val(settingsService.get('flightTime'));
         $('#on-time').val(settingsService.get('onTime'));
 
