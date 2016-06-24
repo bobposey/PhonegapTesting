@@ -42,7 +42,7 @@ $(document).ready(function() {
     }
 
     showUtcTime();
-    setInterval(showUtcTime, 1000);
+    setInterval(liveTimeUpdate, 1000);
 });
 
 function onDeviceReady() {
@@ -50,10 +50,11 @@ function onDeviceReady() {
 }
 
 var settings = {
-    update: function() {
-        // $('#takeoff-time').inputmask("h:s");
-        // $('#flight-time').inputmask("h:s");
+    update: function(ele) {
 
+        if (typeof ele !== "undefined") {
+            this.calculateMissingFlightTime(ele);
+        }
         var takeoffToFirstBreak = $('#takeoff-to-first-break-input').val();
         $('#takeoff-to-first-break-display').html(takeoffToFirstBreak);
         settingsService.set('takeoffToFirstBreak', takeoffToFirstBreak);
@@ -101,14 +102,114 @@ var settings = {
 
         settingsService.set('takeoffTime', $('#takeoff-time').val());
         settingsService.set('flightTime', $('#flight-time').val());
+        settingsService.set('onTime', $('#on-time').val());
         settingsService.set('breakType', $('#double-augmented-switch').prop('checked') ? 'double': 'single');
         calculateBreaks();
+    },
+
+    calculateMissingFlightTime: function(ele) {
+        var takeoffTime = $('#takeoff-time').val();
+        var flightTime = $('#flight-time').val();
+        var onTime = $('#on-time').val();
+        var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
+
+        if (ele == 'off') {
+            if (!patt.test(takeoffTime)) {
+                return;
+            }
+            if (patt.test(flightTime)) {
+                return this.solveMissingFlightTime('on');
+            }
+            if (patt.test(onTime)) {
+                return this.solveMissingFlightTime('flight');
+            }
+            return;
+        }
+
+        if (ele == 'flight') {
+            if (!patt.test(flightTime)) {
+                return;
+            }
+            if (patt.test(takeoffTime)) {
+                return this.solveMissingFlightTime('on');
+            }
+            if (patt.test(onTime)) {
+                return this.solveMissingFlightTime('off');
+            }
+            return;
+        }
+
+        if (ele == 'on') {
+            if (!patt.test(onTime)) {
+                return;
+            }
+            if (patt.test(takeoffTime)) {
+                return this.solveMissingFlightTime('flight');
+            }
+            if (patt.test(flightTime)) {
+                return this.solveMissingFlightTime('off');
+            }
+            return;
+        }
+    },
+
+    solveMissingFlightTime: function(ele) {
+        var takeoffTime = $('#takeoff-time').val();
+        var flightTime = $('#flight-time').val();
+        var onTime = $('#on-time').val();
+        var takeoffTimeArray = takeoffTime.split(':');
+        var flightTimeArray = flightTime.split(':');
+        var onTimeArray = onTime.split(':');
+
+        switch (ele) {
+            case 'off':
+                var offTimeDate = new Date( Date.UTC(
+                    70,
+                    0,
+                    1,
+                    parseInt(onTimeArray[0]) - parseInt(flightTimeArray[0]),
+                    parseInt(onTimeArray[1]) - parseInt(flightTimeArray[1]),
+                    0,
+                    0
+                ));
+                $('#takeoff-time').val(getFormattedTime(offTimeDate, false));
+                break;
+            case 'flight':
+                var flightTimeDate = new Date( Date.UTC(
+                    70,
+                    0,
+                    1,
+                    parseInt(onTimeArray[0]) - parseInt(takeoffTimeArray[0]),
+                    parseInt(onTimeArray[1]) - parseInt(takeoffTimeArray[1]),
+                    0,
+                    0
+                ));
+                if (flightTimeDate.getTime() < 0) {
+                    flightTimeDate.setTime(flightTimeDate.getTime() + 24 * 60 * 60 * 1000);
+                }
+                $('#flight-time').val(getFormattedTime(flightTimeDate, false));
+                break;
+            case 'on':
+                var onTimeDate = new Date( Date.UTC(
+                    70,
+                    0,
+                    1,
+                    parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]),
+                    parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]),
+                    0,
+                    0
+                ));
+                $('#on-time').val(getFormattedTime(onTimeDate, false));
+                break;
+        }
     }
 };
 
 function calculateBreaks() {
     var showMeal = settingsService.get('showMeal');
+    showMeal = showMeal === 'true';
     var showWakeup = settingsService.get('showWakeup');
+    showWakeup = showWakeup === 'true';
     var takeoffTime = settingsService.get('takeoffTime');
     var flightTime = settingsService.get('flightTime');
     var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
@@ -117,8 +218,8 @@ function calculateBreaks() {
     var mealBuffer = settingsService.get('mealBuffer');
     var breakType = settingsService.get('breakType');
 
-    (showMeal == 'true') ?  $('.showMeal').show() : $('.showMeal').hide();
-    (showWakeup == 'true') ?  $('.showWakeup').show() : $('.showWakeup').hide();
+    showMeal ?  $('.showMeal').show() : $('.showMeal').hide();
+    showWakeup ?  $('.showWakeup').show() : $('.showWakeup').hide();
 
     var columns = 5;
     if (!showMeal) {
@@ -142,11 +243,8 @@ function calculateBreaks() {
     var takeoffTimeArray = takeoffTime.split(':');
     var flightTimeArray = flightTime.split(':');
 
-    startTime = new Date(70, 0, 1, 0, takeoffTimeArray[1], 0, 0);
-    endTime = new Date(70, 0, 1, 0, 0, 0, 0);
-    startTime.setUTCHours(parseInt(takeoffTimeArray[0]));
-    endTime.setUTCHours(parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]));
-    endTime.setUTCMinutes(parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]));
+    var startTime = new Date( Date.UTC(70, 0, 1, parseInt(takeoffTimeArray[0]), parseInt(takeoffTimeArray[1]), 0, 0));
+    var endTime = new Date( Date.UTC(70, 0, 1, parseInt(takeoffTimeArray[0]) + parseInt(flightTimeArray[0]), parseInt(takeoffTimeArray[1]) + parseInt(flightTimeArray[1]), 0, 0));
 
     var breaksStartTime = new Date(startTime.getTime());
     breaksStartTime.setMinutes(breaksStartTime.getMinutes() + parseInt(takeoffToFirstBreak));
@@ -196,15 +294,16 @@ function calculateBreaks() {
 }
 
 function clearBreaks() {
+    $('#eachBreakDuration').html('');
     $('#breakResults ons-list-item').remove();
-
 }
 
 function addBreakEntry(breakNumber, start, meal, wakeup, end) {
 
     var showMeal = settingsService.get('showMeal');
-    var showWakeup = settingsService.get('showMeal');
-
+    var showWakeup = settingsService.get('showWakeup');
+    showMeal = showMeal === "true";
+    showWakeup = showWakeup === "true";
     var columns = 5;
     if (!showMeal) {
         columns--;
@@ -228,11 +327,32 @@ function addBreakEntry(breakNumber, start, meal, wakeup, end) {
 
 }
 
+liveTimeUpdate = function() {
+    showUtcTime();
+    showRemainingTime();
+}
+
 showUtcTime = function () {
     var now = new Date();
-    var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+    var now_utc = new Date( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
     showTime('.currentUTCTime', now_utc, true);
 };
+
+showRemainingTime = function() {
+    var onTime = $('#on-time').val();
+    var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
+    if (patt.test(onTime)) {
+        var now = new Date();
+        var now_utc = new Date( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+        var onTimeArray = onTime.split(':');
+        var onTimeDate = new Date( Date.UTC(70, 0, 1, parseInt(onTimeArray[0]), parseInt(onTimeArray[1]), 0, 0));
+        var remainingDate = new Date(onTimeDate.getTime() - now_utc.getTime());
+        if (remainingDate.getTime < 0) {
+            remainingDate = new Date(remainingDate.getTime + 24 * 60 * 60 * 1000);
+        }
+        showTime('.remainingFlightTime', remainingDate, false);
+    }
+}
 
 function showTime(target, date, includeSeconds) {
     var timeOutput = getFormattedTime(date, includeSeconds);
@@ -259,13 +379,38 @@ function getFormattedTime(date, includeSeconds) {
     return timeOutput;
 };
 
+function resetFlightTimes() {
 
+    ons.notification.confirm({
+        message: 'Do you want to reset the flight times?',
+        // or messageHTML: '<div>Message in HTML</div>',
+        title: 'Reset Flight Times',
+        buttonLabels: ['Reset', 'Cancel'],
+        animation: 'default', // or 'none'
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function(index) {
+            // -1: Cancel
+            // 0-: Button index from the left
+            if (index === 0) {
+                $('#takeoff-time').val('');
+                $('#flight-time').val('');
+                $('#on-time').val('');
+                clearBreaks();
+                settingsService.remove('takeoffTime');
+                settingsService.remove('flightTime');
+                settingsService.remove('onTime');
+            }
+        }
+    });
+}
 
 document.addEventListener("init", function(event) {
     var page = event.target.id;
     if (page == 'breaks.html') {
         $('#takeoff-time').inputmask("h:s");
         $('#flight-time').inputmask("h:s");
+        $('#on-time').inputmask("h:s");
         // load settings
         var takeoffToFirstBreak = settingsService.get('takeoffToFirstBreak');
         $('#takeoff-to-first-break-input').val(takeoffToFirstBreak);
@@ -277,6 +422,7 @@ document.addEventListener("init", function(event) {
 
         $('#takeoff-time').val(settingsService.get('takeoffTime'));
         $('#flight-time').val(settingsService.get('flightTime'));
+        $('#on-time').val(settingsService.get('onTime'));
 
         var breakType = settingsService.get('breakType');
         if (breakType == 'single') {

@@ -5,6 +5,7 @@ var settingsService = {
         endOfLastBreak: 50,
         flightTime: '',
         mealBuffer: 30,
+        onTime: '',
         showMeal: false,
         showWakeup: false,
         takeoffTime: '',
@@ -13,7 +14,7 @@ var settingsService = {
     },
 
     set: function(key, value) {
-        if (typeof value == "undefined" || value == '') {
+        if (typeof value == "undefined" || value === '') {
             return;
         }
         localStorage.setItem(key, value);
@@ -31,6 +32,9 @@ var settingsService = {
     clear: function() {
         // removes all settings
         localStorage.clear();
+    },
+
+    remove: function(key) {
+      localStorage.removeItem(key);
     }
-    
 };

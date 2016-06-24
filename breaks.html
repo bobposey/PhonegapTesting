@@ -8,9 +8,63 @@
         <div class="center">
             Break Calculation
         </div>
-        <div class="right" style="padding-right:10px"><span class="currentUTCTime"></span>Z</div>
     </ons-toolbar>
-    <ons-list>
+
+    <ons-list  style="width:30%; float:left">
+        <ons-list-header>Takeoff Time</ons-list-header>
+        <ons-list-item>
+            <ons-input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="Takeoff Time"
+                    input-id="takeoff-time"
+                    onchange="settings.update('off')"
+            >
+            </ons-input>
+        </ons-list-item>
+    </ons-list>
+
+    <ons-list style="width:30%; float:left">
+        <ons-list-header>Flight Time</ons-list-header>
+        <ons-list-item>
+            <ons-input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="Flight Time"
+                    input-id="flight-time"
+                    onchange="settings.update('flight')"
+            >
+            </ons-input>
+        </ons-list-item>
+
+    </ons-list>
+
+    <ons-list style="width:30%; float:left">
+        <ons-list-header>On Time</ons-list-header>
+        <ons-list-item>
+            <ons-input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="On Time"
+                    input-id="on-time"
+                    onchange="settings.update('on')"
+            >
+            </ons-input>
+        </ons-list-item>
+
+    </ons-list>
+
+    <ons-list style="width:10%; float:left">
+        <ons-list-header>&nbsp;</ons-list-header>
+        <ons-list-item>
+            <ons-icon icon="fa-trash-o" id="resetTimes" onclick="resetFlightTimes()"></ons-icon>
+        </ons-list-item>
+    </ons-list>
+
+    <!--- end of times -->
+
+    <!-- start sliders -->
+    <ons-list style="clear:both;">
         <ons-list-header>Takeoff to First Break</ons-list-header>
         <ons-list-item>
             <ons-col width="40px" style="text-align: center; line-height: 31px;">
@@ -54,35 +108,6 @@
         </ons-list-item>
     </ons-list>
 
-    <ons-list  style="width:50%; float:left">
-        <ons-list-header>Takeoff Time</ons-list-header>
-        <ons-list-item>
-            <ons-input
-                    type="text"
-                    pattern="[0-9]*"
-                    placeholder="Takeoff Time"
-                    input-id="takeoff-time"
-                    onchange="settings.update()"
-            >
-            </ons-input>
-        </ons-list-item>
-    </ons-list>
-
-    <ons-list style="width:50%; float:right">
-        <ons-list-header>Flight Time</ons-list-header>
-        <ons-list-item>
-            <ons-input
-                    type="text"
-                    pattern="[0-9]*"
-                    placeholder="Flight Time"
-                    input-id="flight-time"
-                    onchange="settings.update()"
-            >
-            </ons-input>
-        </ons-list-item>
-
-    </ons-list>
-
     <ons-list id="breakResults" style="clear:both;padding-top:20px;">
         <div style="font-size:1.5em;margin-bottom:-20px;padding-left:15px;">Breaks <span id="eachBreakDuration"></span></div>
         <ons-list-header>
@@ -94,5 +119,15 @@
         </ons-list-header>
     </ons-list>
 
+    <div id="footer">
+        <div style="width:50%;float:left;text-align:center;color:#ccc;">
+            UTC
+            <span class="currentUTCTime"></span>
+        </div>
+        <div style="width:50%;float:left;text-align:center;color:#ccc;">
+            Remaining
+            <span class="remainingFlightTime"></span>
+        </div>
+    </div>
 
 </ons-page>
