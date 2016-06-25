@@ -263,6 +263,8 @@ function calculateBreaks() {
         eachBreakDurationMinutes = "0" + eachBreakDurationMinutes;
     }
 
+    clearBreaks();
+
     $('#eachBreakDuration').html(
         '(' +
         Math.floor(eachBreakDuration / 1000 / 60 / 60) + ':' +
@@ -270,7 +272,6 @@ function calculateBreaks() {
         ')'
     );
 
-    clearBreaks();
     // first break
     var currentBreakStartTime = new Date(breaksStartTime.getTime());
     var currentBreakEndTime, currentMealTime, currentWakeupTime;
@@ -373,8 +374,11 @@ function getFormattedTime(date, includeSeconds) {
 
     var timeOutput = hour + ':' + min;
     if (includeSeconds) {
-        sec = Math.floor(sec*10/60);
-        timeOutput += '.' + sec;
+//        sec = Math.floor(sec*10/60);
+        if (sec < 10) {
+            sec = "0" + sec;
+        }
+        timeOutput += ':' + sec;
     }
     return timeOutput;
 };

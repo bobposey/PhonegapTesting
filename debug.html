@@ -1,0 +1,29 @@
+<ons-page>
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+            Debugging
+        </div>
+    </ons-toolbar>
+
+    <div style="background-color:#eeeeee;border:1px solid #ccc; margin: 10px;">
+        <ons-button onclick="hasPermission()">Granted?<br /><span>hasPermission()</span></ons-button>
+        <ons-button onclick="registerPermission()">Register<br /><span>registerPermission()</span></ons-button>
+        <ons-button onclick="scheduleDelayed()">In 5 sec<br /><span>schedule(1, firstAt:later)</span></ons-button>
+    </div>
+
+
+    <div style="margin:10px; padding:10px; font-family: 'Courier New', Courier, Menlo-Regular;">
+        Dubug Console:
+    </div>
+    <div class="debug-pane" style="border:1px solid grey; background-color: #eeeeee; margin:10px; padding:10px; border-radius: 5px;font-family: 'Courier New', Courier, Menlo-Regular;">
+    </div>
+
+    <p style="margin:0 10px;">
+        <ons-button onclick="$('.debug-pane').html('')">Clear</ons-button>
+    </p>
+</ons-page>

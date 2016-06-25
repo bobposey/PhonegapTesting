@@ -27,6 +27,13 @@ scheduleDelayed = function () {
     });
 };
 
+allNotifications = function () {
+    cordova.plugins.notification.local.getAll(function (notifications) {
+        console.log(notifications);
+        showToast('<b>Notifications:</b><br>' + JSON.stringify(notifications));
+    });
+}
+
 showToast = function (text) {
-    ons.notification.alert(text);
+    $('.debug-pane').append('<div>'+text+'</div>');
 };
