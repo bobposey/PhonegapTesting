@@ -2,13 +2,13 @@
 
 hasPermission = function () {
     cordova.plugins.notification.local.hasPermission(function (granted) {
-        showToast(granted ? 'Yes' : 'No');
+        showToast('Granted: ' + granted ? 'Yes' : 'No');
     });
 };
 
 registerPermission = function () {
     cordova.plugins.notification.local.registerPermission(function (granted) {
-        showToast(granted ? 'Yes' : 'No');
+        showToast('Registered: ' + granted ? 'Yes' : 'No');
     });
 };
 
@@ -16,7 +16,7 @@ scheduleDelayed = function (x) {
     var now = new Date().getTime(),
         _sec_from_now = new Date(now + parseInt(x) * 1000);
     var sound = device.platform == 'Android' ? 'file://sound.mp3' : 'file://beep.caf';
-    ons.notification.alert('trying to set notification now...');
+    showToast('Set notification for ' + x + 'seconds from now...');
     cordova.plugins.notification.local.schedule({
         id: 17,
         title: 'Time To Get Up!',
@@ -38,9 +38,7 @@ clearAllNotifications = function() {
         showToast('Notifications Cleared')
     });
 }
-clearAllNotifications2 = function() {
-    cordova.plugins.notification.local.clearAll();
-}
+
 showToast = function (text) {
     $('.debug-pane').append('<div>'+text+'</div>');
 };
