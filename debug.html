@@ -9,11 +9,16 @@
             Debugging
         </div>
     </ons-toolbar>
-
-    <div style="background-color:#eeeeee;border:1px solid #ccc; margin: 10px;">
+    <style>
+        .debug-buttons ons-button {
+            margin: 5px;
+        }
+    </style>
+    <div class='debug-buttons' style="background-color:#eeeeee;border:1px solid #ccc; margin: 10px;">
         <ons-button onclick="hasPermission()">Granted?<br /><span>hasPermission()</span></ons-button>
         <ons-button onclick="registerPermission()">Register<br /><span>registerPermission()</span></ons-button>
         <ons-button onclick="scheduleDelayed()">In 5 sec<br /><span>schedule(1, firstAt:later)</span></ons-button>
+        <ons-button onclick="allNotifications()">All Notifications</ons-button>
     </div>
 
 
