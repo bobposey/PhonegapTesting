@@ -35,8 +35,11 @@ allNotifications = function () {
 
 clearAllNotifications = function() {
     cordova.plugins.notification.local.clearAll(function() {
-        ons.notification.alert("done");
-    }, this);
+        showToast('Notifications Cleared')
+    });
+}
+clearAllNotifications2 = function() {
+    cordova.plugins.notification.local.clearAll();
 }
 showToast = function (text) {
     $('.debug-pane').append('<div>'+text+'</div>');
