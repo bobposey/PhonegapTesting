@@ -10,7 +10,7 @@
         </div>
     </ons-toolbar>
 
-    <ons-list  style="width:29%; float:left">
+    <ons-list  style="width:29%; float:left" class="mainFlightTimes">
         <ons-list-header>Off Time</ons-list-header>
         <ons-list-item>
             <ons-input
@@ -24,7 +24,7 @@
         </ons-list-item>
     </ons-list>
 
-    <ons-list style="width:29%; float:left">
+    <ons-list style="width:29%; float:left" class="mainFlightTimes">
         <ons-list-header>Flight Time</ons-list-header>
         <ons-list-item>
             <ons-input
@@ -39,7 +39,7 @@
 
     </ons-list>
 
-    <ons-list style="width:29%; float:left">
+    <ons-list style="width:29%; float:left" class="mainFlightTimes">
         <ons-list-header>On Time</ons-list-header>
         <ons-list-item>
             <ons-input
@@ -89,7 +89,7 @@
                 </label>
             </ons-col>
             <ons-col>
-                <ons-range style="width: 100%;" value="50" min="0" max="120" oninput="settings.update()" onchange="settings.update()" id="end-of-last-break-input"></ons-range>
+                <ons-range style="width: 100%;" min="0" max="120" oninput="settings.update()" onchange="settings.update()" id="end-of-last-break-input"></ons-range>
             </ons-col>
             <ons-col width="40px" style="text-align: center; line-height: 31px;">
             </ons-col>

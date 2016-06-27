@@ -297,6 +297,7 @@ function calculateBreaks() {
 function clearBreaks() {
     $('#eachBreakDuration').html('');
     $('#breakResults ons-list-item').remove();
+    $('.remainingFlightTime').html('');
 }
 
 function addBreakEntry(breakNumber, start, meal, wakeup, end) {
@@ -335,8 +336,7 @@ liveTimeUpdate = function() {
 
 showUtcTime = function () {
     var now = new Date();
-    var now_utc = new Date( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
-    showTime('.currentUTCTime', now_utc, true);
+    showTime('.currentUTCTime', now, true);
 };
 
 showRemainingTime = function() {
@@ -344,10 +344,9 @@ showRemainingTime = function() {
     var patt = new RegExp('(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]');
     if (patt.test(onTime)) {
         var now = new Date();
-        var now_utc = new Date( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
         var onTimeArray = onTime.split(':');
         var onTimeDate = new Date( Date.UTC(70, 0, 1, parseInt(onTimeArray[0]), parseInt(onTimeArray[1]), 0, 0));
-        var remainingDate = new Date(onTimeDate.getTime() - now_utc.getTime());
+        var remainingDate = new Date(onTimeDate.getTime() - now.getTime());
         if (remainingDate.getTime < 0) {
             remainingDate = new Date(remainingDate.getTime + 24 * 60 * 60 * 1000);
         }
@@ -404,6 +403,31 @@ function resetFlightTimes() {
                 settingsService.remove('offTime');
                 settingsService.remove('flightTime');
                 settingsService.remove('onTime');
+            }
+        }
+    });
+}
+
+function resetAll() {
+    ons.notification.confirm({
+        message: 'Do you want to reset all settings?',
+        title: 'Reset All Settings',
+        buttonLabels: ['Reset', 'Cancel'],
+        animation: 'default', // or 'none'
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function(index) {
+            // -1: Cancel
+            // 0-: Button index from the left
+            if (index === 0) {
+                $('#off-time').val('');
+                $('#flight-time').val('');
+                $('#on-time').val('');
+                clearBreaks();
+                clearAllNotifications();
+                settingsService.clear();
+                fn.load('breaks.html');
+                settings.update();
             }
         }
     });
