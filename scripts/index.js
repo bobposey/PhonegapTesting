@@ -460,6 +460,7 @@ document.addEventListener("init", function(event) {
         }
         showUtcTime();
         calculateBreaks();
+        settings.update()
     }
 
 
