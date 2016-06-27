@@ -61,6 +61,20 @@
     .mainFlightTimes input {
       text-align: center;
     }
+
+    .background-image {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+
+    }
+    .background-image img {
+      width: 220px;
+      opacity: .4;
+      -webkit-filter: grayscale(50%); /* Chrome, Safari, Opera */
+      filter: grayscale(50%);
+    }
   </style>
 </head>
 <body>
@@ -72,6 +86,7 @@
   <ons-splitter>
     <ons-splitter-side id="menu" side="left" width="220px" collapse>
       <ons-page>
+        <img style="width:180px;padding:10px 20px;" src="images/breakulator.png">
         <ons-list>
           <ons-list-item onclick="fn.load('breaks.html')" tappable>
             Break Calc

@@ -1,4 +1,4 @@
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.poseydesign.phonegapdefaultapp" version="0.7.10">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.poseydesign.phonegapdefaultapp" version="0.7.11">
   <name>Breakulator</name>
   <description>Calculate Cruise Break schedule for airline pilots using FAR 117 crew rest breaks</description>
   <author href="http://poseydesign.com" email="bobposey@gmail.com">Bob Posey</author>
