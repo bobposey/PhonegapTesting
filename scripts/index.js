@@ -78,28 +78,6 @@ var settings = {
             settingsService.set('wakeupBuffer', wakeupBuffer);
         }
 
-        $('#calculate-wakeup-enabled').on('change', function() {
-            if ($(this).is(':checked')) {
-                $('#calculate-wakeup-options').show();
-                showWakeup = true;
-            } else {
-                $('#calculate-wakeup-options').hide();
-                showWakeup = false;
-            }
-            settingsService.set('showWakeup', showWakeup);
-        });
-        
-        $('#calculate-meal-enabled').on('change', function() {
-            if ($(this).is(':checked')) {
-                $('#calculate-meal-options').show();
-                showMeal = true;
-            } else {
-                $('#calculate-meal-options').hide();
-                showMeal = false;
-            }
-            settingsService.set('showMeal', showMeal);
-        });
-
         settingsService.set('offTime', $('#off-time').val());
         settingsService.set('flightTime', $('#flight-time').val());
         settingsService.set('onTime', $('#on-time').val());
@@ -491,7 +469,31 @@ document.addEventListener("init", function(event) {
         $('#meal-lead-time-input').val(mealBuffer);
         $('#meal-lead-time-display').html(mealBuffer);
 
+        $('#calculate-wakeup-enabled').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#calculate-wakeup-options').show();
+                showWakeup = true;
+            } else {
+                $('#calculate-wakeup-options').hide();
+                showWakeup = false;
+            }
+            settingsService.set('showWakeup', showWakeup);
+        });
+
+        $('#calculate-meal-enabled').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#calculate-meal-options').show();
+                showMeal = true;
+            } else {
+                $('#calculate-meal-options').hide();
+                showMeal = false;
+            }
+            settingsService.set('showMeal', showMeal);
+        });
+
+
+
         showUtcTime();
-        // show FAR 117 legalities
+
     }
 }, false);
