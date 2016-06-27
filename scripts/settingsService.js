@@ -8,8 +8,8 @@ var settingsService = {
         onTime: '',
         showMeal: false,
         showWakeup: false,
-        takeoffTime: '',
-        takeoffToFirstBreak: 20,
+        offTime: '',
+        offToFirstBreak: 20,
         wakeupBuffer: 10
     },
 
