@@ -151,6 +151,7 @@ var settings = {
                     0
                 ));
                 $('#off-time').val(getFormattedTime(offTimeDate, false));
+                showRemainingTime();
                 break;
             case 'flight':
                 var flightTimeDate = new Date( Date.UTC(
@@ -166,6 +167,7 @@ var settings = {
                     flightTimeDate.setTime(flightTimeDate.getTime() + 24 * 60 * 60 * 1000);
                 }
                 $('#flight-time').val(getFormattedTime(flightTimeDate, false));
+                showRemainingTime();
                 break;
             case 'on':
                 var onTimeDate = new Date( Date.UTC(
@@ -178,6 +180,7 @@ var settings = {
                     0
                 ));
                 $('#on-time').val(getFormattedTime(onTimeDate, false));
+                showRemainingTime();
                 break;
         }
     }
@@ -275,7 +278,6 @@ function calculateBreaks() {
 function clearBreaks() {
     $('#eachBreakDuration').html('');
     $('#breakResults ons-list-item').remove();
-    $('.remainingFlightTime').html('');
 }
 
 function addBreakEntry(breakNumber, start, meal, wakeup, end) {
@@ -329,6 +331,8 @@ showRemainingTime = function() {
             remainingDate = new Date(remainingDate.getTime + 24 * 60 * 60 * 1000);
         }
         showTime('.remainingFlightTime', remainingDate, false);
+    } else {
+        $('.remainingFlightTime').html('');
     }
 }
 
@@ -378,6 +382,7 @@ function resetFlightTimes() {
                 $('#flight-time').val('');
                 $('#on-time').val('');
                 clearBreaks();
+                $('.remainingFlightTime').html('');
                 settingsService.remove('offTime');
                 settingsService.remove('flightTime');
                 settingsService.remove('onTime');
