@@ -81,7 +81,9 @@ var settings = {
         settingsService.set('offTime', $('#off-time').val());
         settingsService.set('flightTime', $('#flight-time').val());
         settingsService.set('onTime', $('#on-time').val());
-        settingsService.set('breakType', $('#double-augmented-switch').prop('checked') ? 'double': 'single');
+        if ($('#double-augmented-switch').length) {
+            settingsService.set('breakType', $('#double-augmented-switch').prop('checked') ? 'double': 'single');
+        }
         calculateBreaks();
     },
 
